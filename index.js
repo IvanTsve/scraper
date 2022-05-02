@@ -10,9 +10,13 @@ axios.get(conf.parsed.MAIN_URL)
 .then(r => {
         const html = r.data;
         const $ = cheerio.load(html);
+        
         $(conf.parsed.SELECTOR, html).each(function () {
             const title = $(this).html();
-            data[title]=[];
+            // console.log(this.parent.attribs.href);
+            const productUrl = this.parent.attribs.href
+            const name=`${productUrl.split('group/')[1]}`;
+            data[title]={productUrl,[name]:[]};
         });
         fs.writeFileSync("files/Food-type.txt", JSON.stringify(data),(err) => {
             if (err) return
